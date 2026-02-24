@@ -1,0 +1,13 @@
+# Desactivar CSP restrictivo para permitir Firebase
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+</IfModule>
+
+# SPA Routing
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /apps/imagenes_ia/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.html [L]
+</IfModule>
