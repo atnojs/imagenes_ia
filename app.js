@@ -408,7 +408,7 @@ const AdminPanel = ({ onClose }) => {
                     <div>
                         <div className="flex items-center gap-3">
                             <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-red-400 to-amber-300 flex items-center justify-center text-slate-950 font-black">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                             </div>
                             <div>
                                 <h2 className="text-2xl font-extrabold text-white leading-tight">Panel de Administración</h2>
@@ -440,7 +440,7 @@ const AdminPanel = ({ onClose }) => {
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 overflow-auto p-6" style={{scrollbarWidth:'thin',scrollbarColor:'rgba(255,255,255,0.1) transparent'}}>
+                <div className="flex-1 overflow-auto p-6" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
                     {/* Tabs */}
                     <div className="flex flex-wrap gap-2 mb-6">
                         <TabBtn id="overview" icon="📊">Estadísticas</TabBtn>
@@ -667,7 +667,7 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                         className="px-3 py-2 glass rounded-xl text-red-300 hover:text-red-200 hover:bg-red-500/10 transition-all border border-red-500/30 flex items-center gap-2 text-xs font-bold"
                         title="Panel de Administración"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                         ADMIN
                     </button>
                 )}
@@ -689,11 +689,11 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 w-full max-w-[95rem]">
+            <div className="flex flex-wrap justify-center gap-6 w-full max-w-[110rem]">
                 {/* Botón Generar Imagen */}
                 <button
                     onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/generar/index.html')}
-                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-purple-500/30"
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-purple-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
                 >
                     <div className="absolute top-0 right-0 p-6 text-purple-500/10 transform group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
@@ -708,7 +708,7 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 {/* Botón Editar Imágenes */}
                 <button
                     onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/editar/index.html')}
-                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-cyan-500/30"
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-cyan-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
                 >
                     <div className="absolute top-0 right-0 p-6 text-cyan-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M19 17v4" /><path d="M3 5h4" /><path d="M17 19h4" /></svg>
@@ -723,7 +723,7 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 {/* Botón Ajustar Imágenes */}
                 <button
                     onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/ajustes_imagen/index.html')}
-                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30"
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
                 >
                     <div className="absolute top-0 right-0 p-6 text-emerald-500/10 transform group-hover:scale-150 group-hover:rotate-6 transition-transform duration-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 2L2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>
@@ -738,7 +738,7 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 {/* Botón Combinar Imágenes */}
                 <button
                     onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/combinar_imagenes/index.html')}
-                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-pink-500/30"
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-pink-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
                 >
                     <div className="absolute top-0 right-0 p-6 text-pink-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /></svg>
@@ -753,7 +753,7 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 {/* Botón Copiar Estilo (NUEVO - 5TO BOTÓN) */}
                 <button
                     onClick={() => handleNavigate('https://atnojs.es/apps/copiar_estilo/index.html')}
-                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-blue-500/30"
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-blue-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
                 >
                     <div className="absolute top-0 right-0 p-6 text-blue-500/10 transform group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
@@ -768,7 +768,7 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 {/* Botón Illusion Diffusion (NUEVO - 6TO BOTÓN) */}
                 <button
                     onClick={() => handleNavigate('https://atnojs.es/apps/illusion_diffusion/index.html')}
-                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-orange-500/30"
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-orange-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
                 >
                     <div className="absolute top-0 right-0 p-6 text-orange-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="12" cy="12" r="10" /><path d="m14.31 8 5.74 9.94" /><path d="M9.69 8h11.48" /><path d="m7.38 12 5.74-9.94" /><path d="M9.69 16 3.95 6.06" /><path d="M14.31 16H2.83" /><path d="m16.62 12-5.74 9.94" /></svg>
@@ -778,6 +778,66 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                     </div>
                     <h2 className="text-2xl font-bold">Illusion Diffusion</h2>
                     <p className="text-gray-400 text-sm leading-relaxed">Crea ilusiones ópticas.</p>
+                </button>
+
+                {/* Botón Decorar Habitación */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/decorar_habitacion/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-indigo-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-indigo-500/10 transform group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+                    </div>
+                    <div className="bg-indigo-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Decorar Habitación</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Rediseña interiores con IA.</p>
+                </button>
+
+                {/* Botón Color */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/color/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-amber-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-amber-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="13.5" cy="6.5" r=".5" /><circle cx="17.5" cy="10.5" r=".5" /><circle cx="8.5" cy="7.5" r=".5" /><circle cx="6.5" cy="12.5" r=".5" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.92 0 1.76-.31 2.42-.84.69-.54.73-1.45.18-2.11-.27-.32-.4-.7-.4-1.05 0-1.38 1.12-2.5 2.5-2.5h2.5c.82 0 1.5-.68 1.5-1.5 0-5.5-4.5-10-10-10Z" /></svg>
+                    </div>
+                    <div className="bg-amber-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="13.5" cy="6.5" r=".5" /><circle cx="17.5" cy="10.5" r=".5" /><circle cx="8.5" cy="7.5" r=".5" /><circle cx="6.5" cy="12.5" r=".5" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.92 0 1.76-.31 2.42-.84.69-.54.73-1.45.18-2.11-.27-.32-.4-.7-.4-1.05 0-1.38 1.12-2.5 2.5-2.5h2.5c.82 0 1.5-.68 1.5-1.5 0-5.5-4.5-10-10-10Z" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Color</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Colorea imágenes con IA.</p>
+                </button>
+
+                {/* Botón Dibujo Líneas */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/dibujo_lineas/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-emerald-500/10 transform group-hover:scale-150 group-hover:rotate-6 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a2.121 2.121(0 1 1 3 3L12 15l-4 1 1-4Z" /></svg>
+                    </div>
+                    <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Dibujo Líneas</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Arte lineal desde fotos.</p>
+                </button>
+
+                {/* Botón Clonador */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/clonador/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-rose-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-rose-500/10 transform group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 2v4" /><path d="m15.4 4.6-2.8 2.8" /><path d="M18 8h-4" /><path d="m15.4 11.4-2.8-2.8" /><path d="M12 14v-4" /><path d="m8.6 11.4 2.8-2.8" /><path d="M6 8h4" /><path d="m8.6 4.6 2.8 2.8" /><circle cx="12" cy="18" r="4" /></svg>
+                    </div>
+                    <div className="bg-rose-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-rose-400 mb-4 border border-rose-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4" /><path d="m15.4 4.6-2.8 2.8" /><path d="M18 8h-4" /><path d="m15.4 11.4-2.8-2.8" /><path d="M12 14v-4" /><path d="m8.6 11.4 2.8-2.8" /><path d="M6 8h4" /><path d="m8.6 4.6 2.8 2.8" /><circle cx="12" cy="18" r="4" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Clonador</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Face swap con IA.</p>
                 </button>
             </div>
 
