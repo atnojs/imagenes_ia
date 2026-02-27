@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Image Studio | Premium Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://atnojs.es/iconos/favicon1.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="app.css">
+
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            document.body.innerHTML = '<div style="color:#2ee8ff; background:#041847; padding:20px; font-family:monospace; border: 2px solid #ff4ecd;">' +
+                '<h1>Error Crítico de Interfaz</h1>' +
+                '<p>' + msg + '</p>' +
+                '<p>Line: ' + line + ':' + col + '</p>' +
+                '<pre>' + (error ? error.stack : 'No stacktrace') + '</pre>' +
+                '</div>';
+        };
+    </script>
+    <script type="importmap">
+    {
+        "imports": {
+            "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/+esm",
+            "react-dom/client": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/client/+esm",
+            "lucide-react": "https://cdn.jsdelivr.net/npm/lucide-react@0.294.0/+esm"
+        }
+    }
+    </script>
+    <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module" data-presets="react" src="app.js"></script>
+</body>
+
+</html>

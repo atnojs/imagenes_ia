@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FusionAI Studio - Copiar Estilo</title>
+
+    <!-- Google Fonts: Montserrat (Títulos) + Poppins (Texto) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Style Guide & Custom Styles (Consolidated) -->
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+    <!-- Background Orbs -->
+    <div class="neon-orb"
+        style="background: radial-gradient(circle, var(--acc) 0%, transparent 70%); top: -100px; left: -100px;"></div>
+    <div class="neon-orb"
+        style="background: radial-gradient(circle, var(--neon-pink) 0%, transparent 70%); bottom: -100px; right: -100px;">
+    </div>
+
+    <h1 class="gradient-text">FUSION STUDIO</h1>
+
+    <div class="container">
+        <!-- Card 1: Style Reference -->
+        <div class="glass upload-card">
+            <h3>Referencia de Escena</h3>
+            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: -10px;">Define iluminación, ángulo y pose
+            </p>
+            <div class="file-input-wrapper">
+                <div class="upload-icon">🖼️</div>
+                <span style="font-size: 0.8rem; font-weight: 500;">Click para subir</span>
+                <input type="file" id="styleInput" accept="image/*">
+                <img id="stylePreview" class="preview-img">
+            </div>
+        </div>
+
+        <!-- Middle: Result Area (Grid de 2 imágenes) -->
+        <div id="resultArea" class="glass">
+            <span class="placeholder-text">El resultado de la IA aparecerá aquí...</span>
+            <div id="resultsGrid" class="results-grid"></div>
+            <div id="resultText"
+                style="white-space: pre-wrap; text-align: left; margin-top: 20px; font-size: 0.9rem; line-height: 1.6;">
+            </div>
+        </div>
+
+        <!-- Card 2: Subject Reference -->
+        <div class="glass upload-card">
+            <h3>Activo de Identidad</h3>
+            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: -10px;">Define rostro y vestuario</p>
+            <div class="file-input-wrapper">
+                <div class="upload-icon">👤</div>
+                <span style="font-size: 0.8rem; font-weight: 500;">Click para subir</span>
+                <input type="file" id="subjectInput" accept="image/*">
+                <img id="subjectPreview" class="preview-img">
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Button below -->
+    <button id="generateBtn" class="btn-primary btn-3d" onclick="generateImage()"
+        style="margin-top: 40px; padding: 18px 50px;">
+        GENERAR FUSIÓN IA
+    </button>
+
+    <!-- Premium Loading Overlay (Style from Editar Imagen) -->
+    <div id="loadingOverlay">
+        <div id="loadingBgImage" class="loading-bg-image"></div>
+        <div class="spinner-triple">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+        </div>
+        <div class="loading-text-glow">IA Generando Obra Maestra...</div>
+    </div>
+
+    <!-- Sección de Historial -->
+    <section id="historySection" class="history-section">
+        <div class="history-header">
+            <h2>📚 Historial</h2>
+            <button id="clearHistoryBtn" class="btn-clear" onclick="clearHistory()">🗑️ Limpiar Todo</button>
+        </div>
+        <div id="historyGrid" class="history-grid"></div>
+    </section>
+
+    <!-- Lightbox para Zoom -->
+    <div id="lightbox" class="lightbox hidden">
+        <img id="lightbox-img" src="" alt="Imagen ampliada">
+        <div class="lightbox-controls">
+            <button class="lightbox-download-btn" onclick="downloadLightboxImage()">📥 Descargar</button>
+        </div>
+    </div>
+
+    <!-- App Logic -->
+    <script src="app_v2.js"></script>
+</body>
+
+</html>

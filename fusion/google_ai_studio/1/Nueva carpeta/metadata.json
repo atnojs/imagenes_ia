@@ -1,0 +1,7 @@
+{
+  "name": "FusionAI Studio",
+  "description": "Professional image blending platform featuring local canvas processing and advanced Gemini AI integration for seamless image synthesis.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

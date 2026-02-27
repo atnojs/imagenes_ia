@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Imagenes Local</title>
+    <link rel="icon" href="https://atnojs.es/iconos/favicon1.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="app.css">
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons({
+                    icons: [
+                        'aperture', 'upload', 'wand-2', 'image-plus', 'download', 'pencil', 'trash-2', 'history', 'save', 'sun',
+                        'move', 'refresh-cw', 'x', 'crop', 'rotate-ccw', 'target', 'circle-dot', 'contrast', 'coffee',
+                        'flip-horizontal', 'flip-vertical', 'rotate-cw', 'maximize', 'square', 'type', 'grid-3x3', 'minus', 'plus',
+                        'wrench', 'palette', 'moon', 'camera'
+                    ]
+                });
+            }
+        });
+    </script>
+</head>
+
+<body class="glass-body text-slate-200 h-screen w-screen overflow-hidden select-none">
+    <div id="root" class="h-full w-full"></div>
+
+    <script type="text/babel" src="app.js?v=1"></script>
+    <script type="text/babel">
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) window.lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>

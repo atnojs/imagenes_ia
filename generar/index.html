@@ -1,0 +1,58 @@
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Security-Policy: default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *;");
+header("X-Content-Security-Policy: default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *;");
+?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador-Editor de Imágenes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://www.atnojs.es/imagenes/favicon_negro1.ico" type="image/x-icon" />
+
+  <!-- Google Fonts: Montserrat + Poppins -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Font Awesome para iconos usados en la app -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Estilos adaptados -->
+  <link rel="stylesheet" href="app.css" />
+
+
+
+  <script>
+    window.onerror = function (msg, url, line, col, error) {
+      document.body.innerHTML = '<div style="color:#2ee8ff; background:#0a0f1e; padding:40px; font-family:monospace; border: 2px solid #22d3ee; border-radius: 20px; margin: 20px; box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);">' +
+        '<h1 style="color: #22d3ee; margin-top: 0;">Error Crítico de Interfaz</h1>' +
+        '<p style="color: #a78bfa; font-size: 1.1rem;">' + msg + '</p>' +
+        '<p style="color: #64748b;">Line: ' + line + ':' + col + '</p>' +
+        '<pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; overflow-x: auto; font-size: 0.9rem; color: #94a3b8; border: 1px solid rgba(255,255,255,0.05);">' + (error ? error.stack : 'No stacktrace') + '</pre>' +
+        '</div>';
+    };
+  </script>
+
+  <script type="importmap">
+    {
+        "imports": {
+            "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/+esm",
+            "react-dom/client": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/client/+esm",
+            "lucide-react": "https://cdn.jsdelivr.net/npm/lucide-react@0.294.0/+esm"
+        }
+    }
+    </script>
+  <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-type="module" data-presets="react" src="app.js?v=2"></script>
+  <noscript>Activa JavaScript para usar esta aplicación.</noscript>
+</body>
+
+</html>

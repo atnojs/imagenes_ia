@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FusionLab AI - Editor de Imágenes Avanzado</title>
+    <link rel="stylesheet" href="app.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="icon" href="https://atnojs.es/imagenes/favicon_negro1.ico" type="image/x-icon">
+    <link rel="icon" href="https://www.atnojs.es/imagenes/favicon_negro1.ico" type="image/x-icon" />
+</head>
+<body>
+    <div class="app-background"></div>
+    <div class="app-container">
+        
+        <header class="glass-panel header">
+            <div class="logo">
+                <i class="ph ph-layers-three"></i>
+                <h1>FusionLab AI</h1>
+            </div>
+            <div class="session-controls">
+                <div class="export-dropdown">
+                     <button class="btn glass-btn primary"><i class="ph ph-download"></i> Exportar</button>
+                     <div class="dropdown-content glass-panel">
+                        <button data-quality="0.5">Baja Resolución</button>
+                        <button data-quality="0.8">Media Resolución</button>
+                        <button data-quality="1.0">Alta Resolución</button>
+                     </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="editor-grid">
+            
+            <aside class="glass-panel sidebar" id="sideA">
+                <h2>Imagen A</h2>
+                <div class="upload-zone" id="dropZoneA">
+                    <i class="ph ph-cloud-arrow-up"></i>
+                    <p>Subir A</p>
+                    <input type="file" id="fileInputA" accept="image/*" hidden>
+                </div>
+                <div class="image-preview-container hidden" id="previewContA">
+                    <img id="previewA" src="" alt="Preview A">
+                    <button class="btn-close" data-target="A"><i class="ph ph-x"></i></button>
+                </div>
+                
+                <div class="controls-group disabled" id="controlsA">
+                    <button class="btn glass-btn full-width compact-btn" id="btnBWA"><i class="ph ph-circle-half"></i> B/N</button>
+                    <div class="slider-control">
+                        <label>Escala</label>
+                        <input type="range" id="scaleA" min="0.5" max="2" step="0.05" value="1">
+                    </div>
+                    <div class="slider-control">
+                        <label>Rotar</label>
+                        <input type="range" id="rotateA" min="-180" max="180" step="5" value="0">
+                    </div>
+                </div>
+            </aside>
+
+            <section class="canvas-area">
+                
+                <div class="glass-panel toolbar central-toolbar">
+                    <button id="btnSwap" class="btn glass-btn" title="Intercambiar"><i class="ph ph-swap"></i></button>
+                    
+                    <div class="transparency-slider-group">
+                        <span class="img-label left">A</span>
+                        <input type="range" id="transparencySlider" min="0" max="100" value="50">
+                        <span class="img-label right">B</span>
+                        <div class="transparency-readout" id="transparencyValue">50% / 50%</div>
+                    </div>
+
+                    <select id="blendModeSelect" class="glass-input">
+                        <option value="normal">Normal</option>
+                        <option value="multiply">Multiply</option>
+                        <option value="screen">Screen</option>
+                        <option value="overlay">Overlay</option>
+                        <option value="darken">Darken</option>
+                        <option value="lighten">Lighten</option>
+                        <option value="hard-light">Hard Light</option>
+                        <option value="difference">Difference</option>
+                        <option value="color">Color</option>
+                        <option value="luminosity">Luminosity</option>
+                    </select>
+
+                     <button id="btnReset" class="btn glass-btn" title="Reset"><i class="ph ph-arrow-counter-clockwise"></i></button>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="btn glass-btn btn-xs" data-set-trans="25">25/75</button>
+                    <button class="btn glass-btn btn-xs" data-set-trans="50">50/50</button>
+                    <button class="btn glass-btn btn-xs" data-set-trans="75">75/25</button>
+                 </div>
+
+                <div class="canvas-wrapper glass-panel" id="canvasWrapper">
+                    <canvas id="mainCanvas"></canvas>
+                    <div id="aiLoading" class="loading-overlay hidden">
+                        <i class="ph ph-spinner-gap font-spin"></i>
+                        <p>Generando...</p>
+                    </div>
+                </div>
+
+                <div class="ai-generation-zone glass-panel compact-zone">
+                    <div class="history-buttons-row">
+                        <button id="btnAddToHistory" class="btn glass-btn success"><i class="ph ph-plus-circle"></i> Agregar a Historial</button>
+                        <button id="btnOpenHistory" class="btn glass-btn"><i class="ph ph-clock-counter-clockwise"></i> Ver Historial</button>
+                    </div>
+                    <button id="btnGenerateAI" class="btn glass-btn primary large full-width disabled">
+                        <i class="ph ph-sparkle"></i> FUSIONAR CON IA
+                    </button>
+                 </div>
+            </section>
+
+            <aside class="glass-panel sidebar" id="sideB">
+                <h2>Imagen B</h2>
+                <div class="upload-zone" id="dropZoneB">
+                    <i class="ph ph-cloud-arrow-up"></i>
+                    <p>Subir B</p>
+                    <input type="file" id="fileInputB" accept="image/*" hidden>
+                </div>
+                <div class="image-preview-container hidden" id="previewContB">
+                    <img id="previewB" src="" alt="Preview B">
+                    <button class="btn-close" data-target="B"><i class="ph ph-x"></i></button>
+                </div>
+
+                 <div class="controls-group disabled" id="controlsB">
+                    <button class="btn glass-btn full-width compact-btn" id="btnBWB"><i class="ph ph-circle-half"></i> B/N</button>
+                     <div class="slider-control">
+                        <label>Escala</label>
+                        <input type="range" id="scaleB" min="0.5" max="2" step="0.05" value="1">
+                    </div>
+                    <div class="slider-control">
+                        <label>Rotar</label>
+                        <input type="range" id="rotateB" min="-180" max="180" step="5" value="0">
+                    </div>
+                </div>
+            </aside>
+
+        </main>
+
+        <div id="historyModal" class="modal-overlay hidden" onclick="if(event.target.id === 'historyModal') document.getElementById('historyModal').classList.add('hidden')">
+            <div class="glass-panel modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3>Historial</h3>
+                    <button id="btnCloseHistory" class="btn-icon"><i class="ph ph-x"></i></button>
+                </div>
+                <div class="history-track" id="historyTrack">
+                    <p class="empty-msg">Sin historial.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,902 @@
+/* ===========================
+   1. VARIABLES DE COLOR (Esenciales para el brillo azul/cyan)
+   =========================== */
+:root {
+  --glass-border: rgba(148, 197, 255, 0.65);
+  --glass-shadow: rgba(3, 7, 18, 0.95);
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e9;
+  --text-main: #e5f0ff;
+  --text-muted: #9ca3af;
+  --danger: #ef4444;
+}
+
+/* ===========================
+   2. CLASE GLASS-MODAL (El efecto cristal del fondo)
+   =========================== */
+.glass-modal {
+  background: linear-gradient(145deg,
+      rgba(15, 23, 42, 0.95),
+      rgba(10, 15, 30, 0.98));
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(56, 189, 248, 0.3),
+    0 0 60px rgba(56, 189, 248, 0.15);
+  /* Resplandor azul externo */
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ===========================
+   3. ESTILOS DE LOS INPUTS (Para que las cajas de texto sean oscuras)
+   =========================== */
+/* Esto asegura que los campos de Email/Contraseña tengan el fondo oscuro correcto */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(148, 197, 255, 0.2) !important;
+  color: white !important;
+  border-radius: 12px;
+}
+
+input:focus {
+  border-color: var(--accent) !important;
+  outline: none;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+
+
+
+
+/* ===========================
+   TOKENS GLASS + GRADIENT
+   =========================== */
+
+:root {
+  --bg1: #041847;
+  --bg2: #00bcd4;
+  --glass-bg: rgba(9, 15, 35, 0.55);
+  --glass-bg-soft: rgba(15, 23, 42, 0.45);
+  --glass-border: rgba(148, 197, 255, 0.65);
+  --glass-border-soft: rgba(148, 197, 255, 0.35);
+  --glass-shadow: rgba(3, 7, 18, 0.95);
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e9;
+  --accent-soft: rgba(56, 189, 248, 0.5);
+  --accent-purple: #a855f7;
+  --text-main: #e5f0ff;
+  --text-muted: #9ca3af;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  color-scheme: dark;
+}
+
+/* ===========================
+   BASE GLOBAL
+   =========================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+}
+
+/* Fondo degradado azul → teal ocupando toda la pantalla */
+.glass-body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Sutil overlay para sensación "digital" */
+.glass-body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.18), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.9), transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(56, 189, 248, 0.18), transparent 55%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Asegurar que el root se adapta a la pantalla */
+#root {
+  height: 100%;
+}
+
+/* El div principal de React (flex, h-full) se comporta como "shell" glass */
+#root>div {
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  background: linear-gradient(145deg,
+      rgba(12, 17, 40, 0.75),
+      rgba(15, 23, 42, 0.65),
+      rgba(15, 23, 42, 0.35));
+  box-shadow:
+    0 25px 60px var(--glass-shadow),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+  border-radius: 24px;
+  border: 1px solid var(--glass-border-soft);
+  padding: 8px;
+}
+
+/* ===========================
+   TIPOGRAFÍA
+   =========================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", "Poppins", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+p,
+span,
+label,
+small {
+  color: var(--text-main);
+}
+
+/* Texto secundario / ayudas */
+.text-slate-500,
+.text-slate-400,
+.text-slate-300 {
+  color: var(--text-muted) !important;
+}
+
+/* ===========================
+   HEADER GLASS
+   =========================== */
+
+body header {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.84),
+      rgba(15, 23, 42, 0.72));
+  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 15px 45px rgba(3, 7, 18, 0.85),
+    0 0 0 1px rgba(15, 23, 42, 0.95),
+    0 0 40px rgba(56, 189, 248, 0.25);
+  backdrop-filter: blur(26px) saturate(1.7);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7);
+  margin-bottom: 8px;
+}
+
+/* Logo y título */
+body header h1 {
+  color: var(--text-main);
+}
+
+/* ===========================
+   LAYOUT PRINCIPAL
+   =========================== */
+
+body main {
+  gap: 8px;
+}
+
+/* Paneles laterales y sección central como tarjetas glass */
+body main>aside,
+body main>section.canvas-container {
+  background: radial-gradient(circle at 0% 0%,
+      rgba(56, 189, 248, 0.15),
+      transparent 55%),
+    radial-gradient(circle at 100% 100%,
+      rgba(168, 85, 247, 0.15),
+      transparent 55%),
+    var(--glass-bg-soft);
+  border-radius: 18px;
+  border: 1px solid var(--glass-border-soft);
+  box-shadow:
+    0 24px 60px var(--glass-shadow),
+    0 0 0 1px rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(28px) saturate(1.8);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
+}
+
+/* ===========================
+   PANEL IZQUIERDO (Asistente)
+   =========================== */
+
+body main>aside:first-of-type {
+  background: linear-gradient(145deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(15, 23, 42, 0.7)),
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.16), transparent 55%);
+}
+
+/* Tarjeta del asistente Gemini */
+body .bg-gradient-to-br.from-indigo-900\/50.to-slate-900 {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(30, 64, 175, 0.9),
+      rgba(56, 189, 248, 0.25)) !important;
+  border-radius: 18px;
+  border: 1px solid rgba(129, 140, 248, 0.6);
+  box-shadow:
+    0 16px 40px rgba(3, 7, 18, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 42px rgba(129, 140, 248, 0.3);
+}
+
+/* ===========================
+   PANEL DERECHO (Historial)
+   =========================== */
+
+body main>aside:last-of-type {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(15, 23, 42, 0.7)),
+    radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.16), transparent 55%);
+}
+
+/* Tarjetas del historial */
+body .bg-slate-800.rounded-lg.p-2.border {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-radius: 14px;
+  border-color: rgba(148, 197, 255, 0.6) !important;
+  box-shadow:
+    0 15px 36px rgba(3, 7, 18, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 1);
+}
+
+/* ===========================
+   CONTENEDOR CENTRAL / CANVAS
+   =========================== */
+
+.canvas-container {
+  position: relative;
+  background: radial-gradient(circle at 50% 0%,
+      rgba(56, 189, 248, 0.22),
+      transparent 55%),
+    radial-gradient(circle at 50% 100%,
+      rgba(8, 47, 73, 0.9),
+      rgba(15, 23, 42, 0.95));
+  border-radius: 18px;
+  border-left: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+  box-shadow:
+    0 40px 80px rgba(3, 7, 18, 1),
+    0 0 0 1px rgba(15, 23, 42, 1);
+  backdrop-filter: blur(30px) saturate(1.9);
+  -webkit-backdrop-filter: blur(30px) saturate(1.9);
+}
+
+/* Estado "dropzone" sin imagen */
+.canvas-container>div.text-center {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(15, 23, 42, 0.8));
+  border-radius: 16px;
+  border: 1px dashed rgba(148, 197, 255, 0.55);
+  box-shadow:
+    0 24px 60px rgba(3, 7, 18, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 40px rgba(56, 189, 248, 0.4);
+}
+
+/* El canvas en sí (imagen) */
+.canvas-container canvas {
+  border-radius: 14px;
+  background: radial-gradient(circle at 50% 50%,
+      rgba(15, 23, 42, 0.6),
+      rgba(15, 23, 42, 0.95));
+  box-shadow:
+    0 22px 50px rgba(3, 7, 18, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 40px rgba(15, 118, 178, 0.5);
+}
+
+/* ===========================
+   BOTONES GLASS 3D + BORDE AZUL
+   =========================== */
+
+/* Base para TODOS los botones dentro de la app */
+body button {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: radial-gradient(circle at 0% 0%,
+      rgba(56, 189, 248, 0.16),
+      transparent 55%),
+    linear-gradient(135deg,
+      rgba(15, 23, 42, 0.98),
+      rgba(30, 64, 175, 0.95));
+  color: var(--text-main);
+  box-shadow:
+    0 16px 32px rgba(3, 7, 18, 0.95),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 32px rgba(56, 189, 248, 0.65);
+  transform: translateY(0);
+  transition:
+    transform 0.16s ease-out,
+    box-shadow 0.16s ease-out,
+    background 0.18s ease-out,
+    border-color 0.16s ease-out,
+    opacity 0.18s ease-out;
+}
+
+/* Borde "iluminado" azul intenso (efecto glow en el contorno) */
+body button::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(120deg,
+      rgba(125, 211, 252, 0.95),
+      rgba(59, 130, 246, 0.9),
+      rgba(96, 165, 250, 0.95),
+      rgba(45, 212, 191, 0.9));
+  opacity: 0.85;
+  pointer-events: none;
+  padding: 1px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Hover → más 3D, borde más brillante */
+body button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 20px 40px rgba(3, 7, 18, 1),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 45px rgba(56, 189, 248, 0.9);
+  border-color: var(--accent-strong);
+}
+
+/* Active → "pulsa" el botón */
+body button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    0 8px 20px rgba(3, 7, 18, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 20px rgba(56, 189, 248, 0.6);
+}
+
+/* Disabled → sin glow exagerado */
+body button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow:
+    0 6px 14px rgba(3, 7, 18, 0.7),
+    0 0 0 1px rgba(15, 23, 42, 1);
+  border-color: rgba(148, 163, 184, 0.5);
+}
+
+/* Ajustes específicos para botones peligrosos (rojos) */
+body button.bg-red-600,
+body button.bg-red-600\/95,
+body button.text-red-100 {
+  background: linear-gradient(135deg,
+      rgba(127, 29, 29, 0.98),
+      rgba(220, 38, 38, 0.98));
+}
+
+body button.bg-red-600:hover,
+body button.bg-red-600\/95:hover,
+body button.text-red-100:hover {
+  box-shadow:
+    0 20px 40px rgba(127, 29, 29, 1),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 45px rgba(248, 113, 113, 0.9);
+}
+
+/* Ajuste para botones pequeños redondos (p.ej. acciones en historial) */
+body button.w-7.h-7 {
+  border-radius: 999px;
+  padding: 0;
+}
+
+/* ===========================
+   MODALES GLASS (LOGIN & ADMIN)
+   =========================== */
+.glass-modal {
+  background: linear-gradient(145deg,
+      rgba(15, 23, 42, 0.95),
+      rgba(10, 15, 30, 0.98));
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(56, 189, 248, 0.3),
+    0 0 60px rgba(56, 189, 248, 0.15);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ===========================
+   INPUT RANGE (SLIDERS)
+   =========================== */
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+
+input[type=range]:focus {
+  outline: none;
+}
+
+/* Pista */
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: linear-gradient(90deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(37, 99, 235, 0.85),
+      rgba(45, 212, 191, 0.85));
+  border-radius: 999px;
+}
+
+/* Thumb */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #bae6fd);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 1),
+    0 0 18px rgba(56, 189, 248, 0.9);
+  margin-top: -7px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 1),
+    0 0 24px rgba(56, 189, 248, 1);
+}
+
+/* Firefox */
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: linear-gradient(90deg,
+      rgba(15, 23, 42, 0.9),
+      rgba(37, 99, 235, 0.85),
+      rgba(45, 212, 191, 0.85));
+  border-radius: 999px;
+}
+
+input[type=range]::-moz-range-thumb {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  border: none;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #bae6fd);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 1),
+    0 0 18px rgba(56, 189, 248, 0.9);
+}
+
+/* Barra rellena en Firefox */
+input[type=range]::-moz-range-progress {
+  height: 4px;
+  background: rgba(56, 189, 248, 0.8);
+}
+
+/* ===========================
+   SCROLLBARS PERSONALIZADOS
+   =========================== */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+      rgba(56, 189, 248, 0.9),
+      rgba(129, 140, 248, 0.9));
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg,
+      rgba(56, 189, 248, 1),
+      rgba(129, 140, 248, 1));
+}
+
+/* ===========================
+   LOADER OVERLAY
+   =========================== */
+
+.loader {
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.75);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Overlay de carga principal */
+body .fixed.inset-0.z-50 {
+  background: radial-gradient(circle at 0% 0%,
+      rgba(56, 189, 248, 0.3),
+      transparent 55%),
+    radial-gradient(circle at 100% 100%,
+      rgba(15, 23, 42, 0.95),
+      rgba(15, 23, 42, 1));
+  backdrop-filter: blur(32px) saturate(1.8);
+  -webkit-backdrop-filter: blur(32px) saturate(1.8);
+}
+
+/* ===========================
+   MENSAJES DE IA / CAJAS TEXTO
+   =========================== */
+
+body .font-mono.p-3.bg-black\/40 {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.95),
+      rgba(15, 23, 42, 0.85)) !important;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 197, 255, 0.6);
+  box-shadow:
+    0 18px 40px rgba(3, 7, 18, 0.95),
+    0 0 0 1px rgba(15, 23, 42, 1);
+}
+
+/* Entradas de texto del chat y meme */
+body input[type="text"].w-full,
+body input[type="email"].w-full,
+body input[type="password"].w-full,
+body textarea.w-full {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(148, 197, 255, 0.55) !important;
+  box-shadow: 0 10px 24px rgba(3, 7, 18, 0.9);
+  color: white;
+}
+
+/* ===========================
+   SELECT DESPLEGABLE (ESTILOS VISUALES)
+   GLASS + 3D + BORDE ILUMINADO
+   =========================== */
+
+/* Solo afecta al select del panel (usa text-xs) */
+body select.text-xs {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 100%;
+  border-radius: 12px !important;
+  border: 1px solid var(--glass-border) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+    linear-gradient(135deg,
+      rgba(15, 23, 42, 0.98),
+      rgba(30, 64, 175, 0.96)) !important;
+  color: var(--text-main) !important;
+  padding: 8px 30px 8px 12px !important;
+  font-size: 11px !important;
+  font-weight: 500;
+  box-shadow:
+    0 12px 28px rgba(3, 7, 18, 0.95),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 26px rgba(56, 189, 248, 0.5) !important;
+  outline: none;
+  cursor: pointer;
+  transition:
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.16s ease,
+    background 0.22s ease;
+  overflow: hidden;
+}
+
+/* Efecto 3D en hover */
+body select.text-xs:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 36px rgba(3, 7, 18, 1),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 40px rgba(56, 189, 248, 0.85) !important;
+  border-color: var(--accent-strong) !important;
+}
+
+/* Estado focus → borde iluminado fuerte */
+body select.text-xs:focus-visible {
+  border-color: var(--accent-strong) !important;
+  box-shadow:
+    0 20px 42px rgba(3, 7, 18, 1),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 50px rgba(56, 189, 248, 1) !important;
+}
+
+/* Deshabilitado */
+body select.text-xs:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow:
+    0 6px 14px rgba(3, 7, 18, 0.7),
+    0 0 0 1px rgba(15, 23, 42, 1) !important;
+}
+
+/* Flecha "custom" */
+body select.text-xs {
+  background-image:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.9)),
+    linear-gradient(45deg, transparent 50%, #7dd3fc 50%),
+    linear-gradient(-45deg, transparent 50%, #7dd3fc 50%);
+  background-position:
+    0 0,
+    calc(100% - 14px) 50%,
+    calc(100% - 9px) 50%;
+  background-size:
+    100% 100%,
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* Opciones del desplegable */
+body select.text-xs option {
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.98),
+      rgba(12, 10, 51, 0.98)) !important;
+  color: var(--text-main) !important;
+}
+
+/* "Iluminación" de la opción al pasar el ratón / seleccionada
+   (limitado por soporte del navegador, pero lo forzamos) */
+body select.text-xs option:hover,
+body select.text-xs option:checked {
+  background: radial-gradient(circle at 0% 0%,
+      rgba(56, 189, 248, 0.3),
+      transparent 55%),
+    linear-gradient(135deg,
+      rgba(15, 23, 42, 0.98),
+      rgba(30, 64, 175, 0.98)) !important;
+  color: var(--text-main) !important;
+}
+
+/* Placeholder un poco más apagado */
+body select.text-xs option[value=""] {
+  color: var(--text-muted) !important;
+}
+
+/* ===========================
+   AJUSTES VARIOS
+   =========================== */
+
+/* Etiquetas de tiempo en historial */
+body .font-mono.text-[10px].text-slate-500 {
+  color: rgba(148, 163, 184, 0.85) !important;
+}
+
+/* Etiqueta "Versión guardada" */
+body span.text-blue-400 {
+  color: rgba(125, 211, 252, 0.95) !important;
+}
+
+/* Pequeño badge numerado en historial */
+body span.bg-black\/70 {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 197, 255, 0.6);
+}
+
+/* Botón flotante "Eliminar solo esta edición" */
+body button.absolute.bottom-4.right-4 {
+  border-radius: 999px;
+}
+
+/* Botón flotante para eliminar imagen */
+body button.absolute.top-4.right-4 {
+  border-radius: 999px;
+  z-index: 30;
+}
+
+/* Añadir al final del archivo CSS */
+/* Estilos para los nuevos deslizadores */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #bae6fd);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 1),
+    0 0 18px rgba(56, 189, 248, 0.9);
+  margin-top: -7px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 1),
+    0 0 24px rgba(56, 189, 248, 1);
+}
+
+/* Estilos para los botones de acciones avanzadas */
+button.bg-indigo-700 {
+  background: linear-gradient(135deg,
+      rgba(30, 64, 175, 0.98),
+      rgba(55, 48, 163, 0.98));
+}
+
+button.bg-indigo-700:hover {
+  box-shadow:
+    0 20px 40px rgba(30, 64, 175, 1),
+    0 0 0 1px rgba(15, 23, 42, 1),
+    0 0 45px rgba(79, 70, 229, 0.9);
+}
+
+
+
+
+/* ===========================
+   TOOLTIPS PREMIUM (ULTRA GLASS)
+   =========================== */
+.glass-popup {
+  /* FONDO: Mucho más transparente (0.45) con tinte azul profundo */
+  background:
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.01), transparent 80%),
+    linear-gradient(160deg, rgba(10, 25, 60, 0.01), rgba(2, 6, 20, 0.01)) !important;
+
+  /* Blur fuerte para que el texto se lea bien sobre fondo transparente */
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+
+  /* Borde sutil cian */
+  border: 2px solid rgba(56, 189, 248, 0.25) !important;
+  border-top: 2px solid rgba(125, 211, 252, 0.4) !important;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(56, 189, 248, 0.1) !important;
+
+  border-radius: 16px;
+  color: #e2e8f0;
+  /* Texto base claro */
+}
+
+/* ===========================
+   3-RING LOADING SPINNER
+   =========================== */
+
+/* Loading Overlay - matches _combinar_imagenes */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: rgba(0, 0, 0, 0.30);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.spinner-triple {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.spinner-triple .ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid transparent;
+}
+
+.spinner-triple .ring-1 {
+  inset: 0;
+  border-top-color: #22d3ee;
+  animation: spin-loader 1.2s linear infinite;
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+}
+
+.spinner-triple .ring-2 {
+  inset: 10px;
+  border-right-color: #a78bfa;
+  animation: spin-loader-reverse 1s linear infinite;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+}
+
+.spinner-triple .ring-3 {
+  inset: 20px;
+  border-bottom-color: #f472b6;
+  animation: spin-loader 0.8s linear infinite;
+  box-shadow: 0 0 10px rgba(244, 114, 182, 0.4);
+}
+
+@keyframes spin-loader {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-loader-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.loading-text {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.8);
+  animation: pulse-text 2s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}

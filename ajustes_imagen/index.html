@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Imágenes Local</title>
+    <link rel="icon" href="https://atnojs.es/iconos/favicon1.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <link rel="stylesheet" href="app.css">
+
+    <!-- Mejora: Precargar iconos para mejor rendimiento -->
+    <script>
+        // Precargar iconos de Lucide para mejor rendimiento
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                // Precargar iconos específicos que usamos en la aplicación
+lucide.createIcons({
+                    icons: [
+                        'aperture', 'upload', 'lock', 'shield', 'log-out',
+                        'download', 'pencil', 'trash-2', 'history', 'save', 'sun',
+                        'move', 'refresh-cw', 'x', 'bar-chart-3', 'users', 'badge-check',
+                        'trophy', 'edit-2', 'copy', 'check', 'crop',
+                        'rotate-ccw', 'circle-dot', 'contrast', 'coffee',
+                        'flip-horizontal', 'flip-vertical', 'rotate-cw', 'maximize',
+                        'square', 'type', 'grid-3x3', 'minus', 'plus', 'wrench', 'pipette', 'scaling', 'spline', 'camera', 'moon'
+                    ]
+                });
+            }
+        });
+    </script>
+</head>
+
+<body class="glass-body text-slate-200 h-screen w-screen overflow-hidden select-none">
+    <div id="root" class="h-full w-full"></div>
+
+    <script type="text/babel" src="app.js?v=13"></script>
+    <script type="text/babel">
+        // Inicializar íconos de Lucide después de cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) window.lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>
