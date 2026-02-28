@@ -14,12 +14,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-const ADMIN_EMAIL = "atnojs@gmail.com";
-const DAILY_LIMIT = 8;
-
-// --- HELPERS FIREBASE ---
-const getTodayDateString = () => new Date().toISOString().split('T')[0];
-
 // Forzar logout al cargar la página para siempre pedir login
 auth.signOut();
 
@@ -99,7 +93,7 @@ const LoginModal = ({ onLogin }) => {
             <div className="glass-modal w-full max-w-md p-8 rounded-3xl">
                 <div className="text-center mb-8">
                     <div className="w-16 h-16 bg-cyan-500/20 rounded-2xl flex items-center justify-center text-cyan-400 mx-auto mb-4 border border-cyan-500/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 11V7a5 5 0 0 1 10 0v4" /><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                     </div>
                     <h2 className="text-3xl font-bold text-white">
                         {isLogin ? 'Bienvenido' : 'Crear Cuenta'}
@@ -178,337 +172,188 @@ const LoginModal = ({ onLogin }) => {
     );
 };
 
-// --- COMPONENTE: PANEL DE ADMINISTRADOR ---
-const AdminPanel = ({ onClose }) => {
-    const [users, setUsers] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [stats, setStats] = React.useState(null);
-    const [searchTerm, setSearchTerm] = React.useState('');
-    const [selectedTab, setSelectedTab] = React.useState('overview');
-    const [lastRefresh, setLastRefresh] = React.useState(null);
-
-    const today = getTodayDateString();
-
-    const safeDate = (ts) => {
-        try {
-            if (!ts) return null;
-            if (typeof ts.seconds === 'number') return new Date(ts.seconds * 1000);
-            if (ts instanceof Date) return ts;
-            const d = new Date(ts);
-            return isNaN(d.getTime()) ? null : d;
-        } catch {
-            return null;
-        }
-    };
-
-    const formatDateTime = (d) => {
-        if (!d) return '-';
-        return d.toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-    };
-
-    const exportUsersCSV = () => {
-        if (!users || users.length === 0) return;
-        const headers = ['UID', 'Email', 'Uso hoy', 'Última actividad'];
-        const rows = users.map(u => {
-            const usageToday = u.todayUsage ?? 0;
-            const lastActive = u.lastActive ? new Date(u.lastActive.seconds * 1000).toISOString() : '';
-            return [`"${u.id}"`, `"${u.email || ''}"`, usageToday, `"${lastActive}"`].join(',');
-        });
-        const csvContent = [headers.join(','), ...rows].join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'usuarios_admin.csv';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    };
-
-    const computeStats = (usersData) => {
-        const now = Date.now();
-        const last24hMs = 24 * 60 * 60 * 1000;
-        const total = usersData.length;
-        const activeToday = usersData.filter(u => (u.todayUsage || 0) > 0).length;
-        const limitReached = usersData.filter(u => (u.todayUsage || 0) >= DAILY_LIMIT).length;
-        const totalUsageToday = usersData.reduce((s, u) => s + (u.todayUsage || 0), 0);
-        const avgUsageActive = activeToday > 0 ? (totalUsageToday / activeToday) : 0;
-        const last24hActive = usersData.filter(u => u.lastActiveDate && (now - u.lastActiveDate.getTime()) <= last24hMs).length;
-        const topUsers = [...usersData].sort((a, b) => (b.todayUsage || 0) - (a.todayUsage || 0)).slice(0, 8);
-        const roleCounts = usersData.reduce((acc, u) => {
-            const role = u.role || 'user';
-            acc[role] = (acc[role] || 0) + 1;
-            return acc;
-        }, {});
-        setStats({ total, activeToday, last24hActive, totalUsageToday, avgUsageActive, limitReached, roleCounts, topUsers });
-    };
-
-    const loadData = async () => {
-        setLoading(true);
-        try {
-            const snapshot = await db.collection('users').limit(300).get();
-            const usersData = await Promise.all(snapshot.docs.map(async (doc) => {
-                const data = doc.data() || {};
-                const usageDoc = await doc.ref.collection('usage').doc(today).get();
-                const todayUsage = usageDoc.exists ? (usageDoc.data()?.count || 0) : 0;
-                const email = data.email || '';
-                const role = data.role || (email === ADMIN_EMAIL ? 'admin' : 'user');
-                const lastActiveDate = safeDate(data.lastActive);
-                return { uid: doc.id, email, role, todayUsage, lastActiveRaw: data.lastActive || null, lastActiveDate, lastActiveText: formatDateTime(lastActiveDate) };
-            }));
-            usersData.sort((a, b) => (b.lastActiveDate?.getTime() || 0) - (a.lastActiveDate?.getTime() || 0));
-            setUsers(usersData);
-            computeStats(usersData);
-            setLastRefresh(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-        } catch (e) {
-            console.error('Error loading admin data:', e);
-            alert('Error cargando datos de Firestore: ' + (e?.message || e));
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    React.useEffect(() => {
-        loadData();
-        const intervalId = setInterval(loadData, 30000);
-        return () => clearInterval(intervalId);
-    }, []);
-
-    const resetTodayUsage = async (uid) => {
-        try {
-            await db.collection('users').doc(uid).collection('usage').doc(today).set({ count: 0 }, { merge: true });
-            await loadData();
-        } catch (e) { alert('Error reseteando uso: ' + e.message); }
-    };
-
-    const setRole = async (uid, newRole) => {
-        try {
-            await db.collection('users').doc(uid).set({ role: newRole }, { merge: true });
-            await loadData();
-        } catch (e) { alert('Error actualizando rol: ' + e.message); }
-    };
-
-    const deleteUserDoc = async (uid, email) => {
-        if (!confirm(`¿Eliminar el usuario en Firestore?\n\n ${email || uid}`)) return;
-        try {
-            await db.collection('users').doc(uid).delete();
-            await loadData();
-        } catch (e) { alert('Error eliminando usuario: ' + e.message); }
-    };
-
-    const filteredUsers = users.filter(u => {
-        const q = searchTerm.trim().toLowerCase();
-        if (!q) return true;
-        return (u.email || '').toLowerCase().includes(q) || (u.uid || '').toLowerCase().includes(q);
-    });
-
-    const StatCard = ({ icon, label, value, subtext, accent = 'from-cyan-400 to-violet-400' }) => (
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 backdrop-blur-xl p-5 shadow-xl">
-            <div className={`absolute -top-10 -right-10 h-28 w-28 rounded-full bg-gradient-to-br ${accent} opacity-20 blur-2xl`} />
-            <div className="relative flex items-start gap-3">
-                <div className={`h-10 w-10 rounded-xl bg-gradient-to-br ${accent} opacity-90 flex items-center justify-center text-slate-950 font-black`}>{icon}</div>
-                <div className="flex-1">
-                    <div className="text-xs uppercase tracking-wider text-slate-400 font-bold">{label}</div>
-                    <div className="text-2xl font-extrabold text-white leading-tight">{value}</div>
-                    {subtext && <div className="mt-1 text-xs text-slate-400">{subtext}</div>}
-                </div>
-            </div>
-        </div>
-    );
-
-    return (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-            <div className="w-full max-w-6xl max-h-[90vh] rounded-3xl overflow-hidden border border-white/10 bg-slate-950/70 shadow-2xl flex flex-col">
-                <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-red-400 to-amber-300 flex items-center justify-center text-slate-950 font-black">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-extrabold text-white leading-tight">Panel Admin</h2>
-                            <p className="text-sm text-slate-400">{lastRefresh ? `Actualizado: ${lastRefresh}` : 'Cargando...'}</p>
-                        </div>
-                    </div>
-                    <button onClick={onClose} className="px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-200 text-sm font-bold">✕ Cerrar</button>
-                </div>
-                <div className="flex-1 overflow-auto p-6">
-                    {loading ? <div className="text-center py-20 text-white">Cargando...</div> : (
-                        <div className="space-y-6">
-                            {selectedTab === 'overview' && stats && (
-                                <>
-                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                        <StatCard icon="👥" label="Total" value={stats.total} />
-                                        <StatCard icon="🔥" label="Activos" value={stats.activeToday} accent="from-amber-300 to-red-400" />
-                                        <StatCard icon="📈" label="Uso" value={stats.totalUsageToday} accent="from-emerald-300 to-cyan-300" />
-                                        <StatCard icon="⏱️" label="24h" value={stats.last24hActive} accent="from-violet-300 to-fuchsia-300" />
-                                    </div>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                        {stats.topUsers.map(u => (
-                                            <div key={u.uid} className="p-4 glass rounded-xl flex justify-between items-center">
-                                                <div className="truncate"><div className="font-bold text-white">{u.email}</div><div className="text-xs text-gray-500">{u.uid}</div></div>
-                                                <div className="font-bold text-cyan-400">{u.todayUsage} / {DAILY_LIMIT}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
-
 // --- SPLASH SCREEN ---
-const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
-    const handleNavigate = (url) => { window.open(url, '_blank'); };
+const Splash = ({ onLogout, user }) => {
+    const handleNavigate = (url) => {
+        window.open(url, '_blank');
+    };
 
     return (
-        <div className="min-h-screen flex flex-col items-center p-6 pt-16 pb-20 space-y-12 relative overflow-y-auto w-full">
-            <div className="absolute top-6 right-6 flex items-center gap-3">
-                {isAdmin && (
-                    <button onClick={onAdminOpen} className="px-3 py-2 glass rounded-xl text-red-300 border border-red-500/30 text-xs font-bold">ADMIN</button>
-                )}
-                <button onClick={onLogout} className="p-3 glass rounded-xl text-gray-400 border border-white/10 hover:text-red-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16,17 21,12 16,7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 space-y-12 relative">
+            {/* Botón de logout */}
+            <button
+                onClick={onLogout}
+                className="absolute top-6 right-6 p-3 glass rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all border-white/10"
+                title="Cerrar sesión"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16,17 21,12 16,7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
+            </button>
+
+            <div className="text-center space-y-4">
+                <h1 className="text-6xl md:text-8xl font-extrabold gradient-text tracking-tight uppercase">
+                    Edita como un Pro
+                </h1>
+                <p className="text-gray-300 text-lg md:text-2xl font-light max-w-2xl mx-auto">
+                    <span className="neon-text font-semibold">Generación/Edición/Estilos Visuales de Imágenes</span>
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 w-full max-w-[95rem]">
+                {/* Botón Generar Imagen */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/generar/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-purple-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-purple-500/10 transform group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                    </div>
+                    <div className="bg-purple-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-purple-400 mb-4 border border-purple-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z" /><path d="m14 7 3 3" /><path d="M5 6v4" /><path d="M19 14v4" /><path d="M10 2v2" /><path d="M7 8H3" /><path d="M21 16h-4" /><path d="M11 3H9" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Generar Imagen</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Genera imágenes desde texto.</p>
+                </button>
+
+                {/* Botón Editar Imágenes */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/editar/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-cyan-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-cyan-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M19 17v4" /><path d="M3 5h4" /><path d="M17 19h4" /></svg>
+                    </div>
+                    <div className="bg-cyan-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-cyan-400 mb-4 border border-cyan-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /><path d="M5 3v4" /><path d="M19 17v4" /><path d="M3 5h4" /><path d="M17 19h4" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Editar Imágenes</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Edita con Nano Banana Pro.</p>
+                </button>
+
+                {/* Botón Ajustar Imágenes */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/ajustes_imagen/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-emerald-500/10 transform group-hover:scale-150 group-hover:rotate-6 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 2L2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>
+                    </div>
+                    <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Ajustar Imágenes</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Corrige brillo, saturación y más.</p>
+                </button>
+
+                {/* Botón Combinar Imágenes */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/combinar_imagenes/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-pink-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-pink-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /></svg>
+                    </div>
+                    <div className="bg-pink-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-pink-400 mb-4 border border-pink-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Combinar Imágenes</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Fusiona varias imágenes con IA.</p>
+                </button>
+
+                {/* Botón Copiar Estilo (NUEVO - 5TO BOTÓN) */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/copiar_estilo/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-blue-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-blue-500/10 transform group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+                    </div>
+                    <div className="bg-blue-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 mb-4 border border-blue-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Copiar Estilo</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Transfiere estilos visuales.</p>
+                </button>
+
+                {/* Botón Illusion Diffusion (NUEVO - 6TO BOTÓN) */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/illusion_diffusion/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-orange-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-orange-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="12" cy="12" r="10" /><path d="m14.31 8 5.74 9.94" /><path d="M9.69 8h11.48" /><path d="m7.38 12 5.74-9.94" /><path d="M9.69 16 3.95 6.06" /><path d="M14.31 16H2.83" /><path d="m16.62 12-5.74 9.94" /></svg>
+                    </div>
+                    <div className="bg-orange-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-orange-400 mb-4 border border-orange-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="m14.31 8 5.74 9.94" /><path d="M9.69 8h11.48" /><path d="m7.38 12 5.74-9.94" /><path d="M9.69 16 3.95 6.06" /><path d="M14.31 16H2.83" /><path d="m16.62 12-5.74 9.94" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Illusion Diffusion</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Crea ilusiones ópticas.</p>
                 </button>
             </div>
 
-            <div className="text-center space-y-4 pt-12">
-                <h1 className="text-6xl md:text-8xl font-extrabold gradient-text uppercase tracking-tight">Edita como un Pro</h1>
-                <p className="text-gray-300 text-lg md:text-2xl font-light max-w-2xl mx-auto"><span className="neon-text font-semibold">Generación/Edición/Estilos Visuales de Imágenes</span></p>
+            {/* Segunda Fila (4 Botones centrados) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-[63rem]">
+                {/* Botón Decorar Habitación */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/decorar_habitacion/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-indigo-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-indigo-500/10 transform group-hover:scale-150 group-hover:rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+                    </div>
+                    <div className="bg-indigo-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Decorar Habitación</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Rediseña interiores con IA.</p>
+                </button>
+
+                {/* Botón Color */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/color/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-amber-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-amber-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg>
+                    </div>
+                    <div className="bg-amber-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" /><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" /><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" /><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Color</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Colorea imágenes con IA.</p>
+                </button>
+
+                {/* Botón Dibujo Líneas */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/dibujo_lineas/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-teal-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-teal-500/10 transform group-hover:scale-150 group-hover:rotate-6 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 19l7-7 3 3-7 7-3-3z" /><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" /><path d="M2 2l7.586 7.586" /><circle cx="11" cy="11" r="2" /></svg>
+                    </div>
+                    <div className="bg-teal-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-teal-400 mb-4 border border-teal-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 19l7-7 3 3-7 7-3-3z" /><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" /><path d="M2 2l7.586 7.586" /><circle cx="11" cy="11" r="2" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Dibujo Líneas</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Arte lineal desde fotos.</p>
+                </button>
+
+                {/* Botón Clonador */}
+                <button
+                    onClick={() => handleNavigate('https://atnojs.es/apps/clonador/index.html')}
+                    className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-rose-500/30"
+                >
+                    <div className="absolute top-0 right-0 p-6 text-rose-500/10 transform group-hover:scale-150 group-hover:-rotate-12 transition-transform duration-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                    </div>
+                    <div className="bg-rose-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-rose-400 mb-4 border border-rose-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold">Clonador</h2>
+                    <p className="text-gray-400 text-sm leading-relaxed">Face swap con IA.</p>
+                </button>
             </div>
 
-            <div className="flex flex-col items-center gap-6 w-full max-w-[120rem]">
-                {/* Primera Fila (6 Botones) */}
-                <div className="flex flex-wrap justify-center gap-6 w-full">
-                    {/* Botón Generar Imagen */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/generar/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-purple-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-purple-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
-                        </div>
-                        <div className="bg-purple-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-purple-400 mb-4 border border-purple-500/30">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z" /><path d="m14 7 3 3" /><path d="M5 6v4" /><path d="M19 14v4" /><path d="M10 2v2" /><path d="M7 8H3" /><path d="M21 16h-4" /><path d="M11 3H9" /></svg>
-                        </div>
-                        <h2 className="text-2xl font-bold">Generar Imagen</h2>
-                        <p className="text-gray-400 text-sm">Genera imágenes desde texto.</p>
-                    </button>
-
-                    {/* Botón Editar Imágenes */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/editar/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-cyan-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-cyan-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="wand-2" size={160} />
-                        </div>
-                        <div className="bg-cyan-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-cyan-400 mb-4 border border-cyan-500/30">
-                            <Icon name="wand-2" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Editar Imágenes</h2>
-                        <p className="text-gray-400 text-sm">Edita con Nano Banana Pro.</p>
-                    </button>
-
-                    {/* Botón Ajustar Imágenes */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/ajustes_imagen/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-emerald-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="sliders" size={160} />
-                        </div>
-                        <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
-                            <Icon name="sliders" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Ajustar Imágenes</h2>
-                        <p className="text-gray-400 text-sm">Corrección de color y más.</p>
-                    </button>
-
-                    {/* Botón Combinar Imágenes */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/combinar_imagenes/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-pink-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-pink-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="layers" size={160} />
-                        </div>
-                        <div className="bg-pink-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-pink-400 mb-4 border border-pink-500/30">
-                            <Icon name="layers" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Combinar Imágenes</h2>
-                        <p className="text-gray-400 text-sm">Fusiona imágenes con IA.</p>
-                    </button>
-
-                    {/* Botón Copiar Estilo */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/copiar_estilo/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-blue-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-blue-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="copy" size={160} />
-                        </div>
-                        <div className="bg-blue-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 mb-4 border border-blue-500/30">
-                            <Icon name="copy" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Copiar Estilo</h2>
-                        <p className="text-gray-400 text-sm">Transfiere estilos visuales.</p>
-                    </button>
-
-                    {/* Botón Illusion Diffusion */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/illusion_diffusion/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-orange-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-orange-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="circle-dashed" size={160} />
-                        </div>
-                        <div className="bg-orange-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-orange-400 mb-4 border border-orange-500/30">
-                            <Icon name="circle-dashed" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Illusion Diffusion</h2>
-                        <p className="text-gray-400 text-sm">Crea ilusiones ópticas.</p>
-                    </button>
-                </div>
-
-                {/* Segunda Fila (Resto Centrados) */}
-                <div className="flex flex-wrap justify-center gap-6 w-full">
-                    {/* Botón Decorar Habitación */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/decorar_habitacion/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-indigo-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-indigo-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="home" size={160} />
-                        </div>
-                        <div className="bg-indigo-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/30">
-                            <Icon name="home" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Decorar Habitación</h2>
-                        <p className="text-gray-400 text-sm">Rediseña interiores con IA.</p>
-                    </button>
-
-                    {/* Botón Color */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/color/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-amber-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-amber-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="palette" size={160} />
-                        </div>
-                        <div className="bg-amber-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/30">
-                            <Icon name="palette" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Color</h2>
-                        <p className="text-gray-400 text-sm">Colorea imágenes con IA.</p>
-                    </button>
-
-                    {/* Botón Dibujo Líneas */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/dibujo_lineas/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-emerald-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="pen-tool" size={160} />
-                        </div>
-                        <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
-                            <Icon name="pen-tool" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Dibujo Líneas</h2>
-                        <p className="text-gray-400 text-sm">Arte lineal desde fotos.</p>
-                    </button>
-
-                    {/* Botón Clonador */}
-                    <button onClick={() => handleNavigate('https://atnojs.es/apps/clonador/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-rose-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                        <div className="absolute top-0 right-0 p-6 text-rose-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                            <Icon name="users" size={160} />
-                        </div>
-                        <div className="bg-rose-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-rose-400 mb-4 border border-rose-500/30">
-                            <Icon name="users" size={28} />
-                        </div>
-                        <h2 className="text-2xl font-bold">Clonador</h2>
-                        <p className="text-gray-400 text-sm">Face swap con IA.</p>
-                    </button>
-                </div>
-            </div>
-
+            {/* Info de usuario */}
             {user && (
                 <div className="text-center text-xs text-gray-500 mt-8">
                     Conectado como: <span className="text-cyan-400">{user.email}</span>
@@ -522,11 +367,10 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 const App = () => {
     const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
-    const [adminPanelOpen, setAdminPanelOpen] = React.useState(false);
 
     React.useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((u) => {
-            setUser(u);
+        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+            setUser(currentUser);
             setLoading(false);
         });
         return () => unsubscribe();
@@ -537,12 +381,10 @@ const App = () => {
         setUser(null);
     };
 
-    const isAdmin = user && user.email === ADMIN_EMAIL;
-
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <svg className="animate-spin text-cyan-400" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+                <svg className="animate-spin text-cyan-400" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
             </div>
         );
     }
@@ -557,10 +399,7 @@ const App = () => {
                     <LoginModal onLogin={setUser} />
                 </>
             ) : (
-                <>
-                    <Splash onLogout={handleLogout} user={user} isAdmin={isAdmin} onAdminOpen={() => setAdminPanelOpen(true)} />
-                    {adminPanelOpen && <AdminPanel onClose={() => setAdminPanelOpen(false)} />}
-                </>
+                <Splash onLogout={handleLogout} user={user} />
             )}
         </div>
     );
