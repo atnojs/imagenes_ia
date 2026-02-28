@@ -366,7 +366,7 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
     const handleNavigate = (url) => { window.open(url, '_blank'); };
 
     return (
-        <div className="min-h-screen flex flex-col items-center p-6 py-12 md:py-20 space-y-8 relative overflow-y-auto w-full">
+        <div className="min-h-screen flex flex-col items-center p-6 pt-16 pb-20 space-y-12 relative overflow-y-auto w-full">
             <div className="absolute top-6 right-6 flex items-center gap-3">
                 {isAdmin && (
                     <button onClick={onAdminOpen} className="px-3 py-2 glass rounded-xl text-red-300 border border-red-500/30 text-xs font-bold">ADMIN</button>
@@ -376,104 +376,110 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 </button>
             </div>
 
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-4 pt-12">
                 <h1 className="text-6xl md:text-8xl font-extrabold gradient-text uppercase tracking-tight">Edita como un Pro</h1>
                 <p className="text-gray-300 text-lg md:text-2xl font-light max-w-2xl mx-auto"><span className="neon-text font-semibold">Generación/Edición/Estilos Visuales de Imágenes</span></p>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6 w-full max-w-[120rem] px-4">
-                {/* Botón Generar Imagen */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/generar/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-purple-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="absolute top-0 right-0 p-6 text-purple-500/10 transform group-hover:scale-150 transition-transform duration-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
-                    </div>
-                    <div className="bg-purple-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-purple-400 mb-4 border border-purple-500/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z" /><path d="m14 7 3 3" /><path d="M5 6v4" /><path d="M19 14v4" /><path d="M10 2v2" /><path d="M7 8H3" /><path d="M21 16h-4" /><path d="M11 3H9" /></svg>
-                    </div>
-                    <h2 className="text-2xl font-bold">Generar Imagen</h2>
-                    <p className="text-gray-400 text-sm">Genera imágenes desde texto.</p>
-                </button>
+            <div className="flex flex-col items-center gap-6 w-full max-w-[120rem]">
+                {/* Primera Fila (6 Botones) */}
+                <div className="flex flex-wrap justify-center gap-6 w-full">
+                    {/* Botón Generar Imagen */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/generar/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-purple-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-purple-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                        </div>
+                        <div className="bg-purple-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-purple-400 mb-4 border border-purple-500/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z" /><path d="m14 7 3 3" /><path d="M5 6v4" /><path d="M19 14v4" /><path d="M10 2v2" /><path d="M7 8H3" /><path d="M21 16h-4" /><path d="M11 3H9" /></svg>
+                        </div>
+                        <h2 className="text-2xl font-bold">Generar Imagen</h2>
+                        <p className="text-gray-400 text-sm">Genera imágenes desde texto.</p>
+                    </button>
 
-                {/* Botón Editar Imágenes */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/editar/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-cyan-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-cyan-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-cyan-400 mb-4 border border-cyan-500/30">
-                        <Icon name="wand-2" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Editar Imágenes</h2>
-                    <p className="text-gray-400 text-sm">Edita con Nano Banana Pro.</p>
-                </button>
+                    {/* Botón Editar Imágenes */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/editar/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-cyan-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-cyan-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-cyan-400 mb-4 border border-cyan-500/30">
+                            <Icon name="wand-2" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Editar Imágenes</h2>
+                        <p className="text-gray-400 text-sm">Edita con Nano Banana Pro.</p>
+                    </button>
 
-                {/* Botón Ajustar Imágenes */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/ajustes_imagen/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
-                        <Icon name="sliders" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Ajustar Imágenes</h2>
-                    <p className="text-gray-400 text-sm">Corrección de color y más.</p>
-                </button>
+                    {/* Botón Ajustar Imágenes */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/ajustes_imagen/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
+                            <Icon name="sliders" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Ajustar Imágenes</h2>
+                        <p className="text-gray-400 text-sm">Corrección de color y más.</p>
+                    </button>
 
-                {/* Botón Combinar Imágenes */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/combinar_imagenes/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-pink-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-pink-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-pink-400 mb-4 border border-pink-500/30">
-                        <Icon name="layers" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Combinar Imágenes</h2>
-                    <p className="text-gray-400 text-sm">Fusiona imágenes con IA.</p>
-                </button>
+                    {/* Botón Combinar Imágenes */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/combinar_imagenes/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-pink-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-pink-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-pink-400 mb-4 border border-pink-500/30">
+                            <Icon name="layers" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Combinar Imágenes</h2>
+                        <p className="text-gray-400 text-sm">Fusiona imágenes con IA.</p>
+                    </button>
 
-                {/* Botón Copiar Estilo */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/copiar_estilo/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-blue-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-blue-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 mb-4 border border-blue-500/30">
-                        <Icon name="copy" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Copiar Estilo</h2>
-                    <p className="text-gray-400 text-sm">Transfiere estilos visuales.</p>
-                </button>
+                    {/* Botón Copiar Estilo */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/copiar_estilo/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-blue-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-blue-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 mb-4 border border-blue-500/30">
+                            <Icon name="copy" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Copiar Estilo</h2>
+                        <p className="text-gray-400 text-sm">Transfiere estilos visuales.</p>
+                    </button>
 
-                {/* Botón Illusion Diffusion */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/illusion_diffusion/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-orange-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-orange-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-orange-400 mb-4 border border-orange-500/30">
-                        <Icon name="circle-dashed" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Illusion Diffusion</h2>
-                    <p className="text-gray-400 text-sm">Crea ilusiones ópticas.</p>
-                </button>
+                    {/* Botón Illusion Diffusion */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/illusion_diffusion/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-orange-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-orange-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-orange-400 mb-4 border border-orange-500/30">
+                            <Icon name="circle-dashed" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Illusion Diffusion</h2>
+                        <p className="text-gray-400 text-sm">Crea ilusiones ópticas.</p>
+                    </button>
+                </div>
 
-                {/* Botón Decorar Habitación */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/decorar_habitacion/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-indigo-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-indigo-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/30">
-                        <Icon name="home" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Decorar Habitación</h2>
-                    <p className="text-gray-400 text-sm">Rediseña interiores con IA.</p>
-                </button>
+                {/* Segunda Fila (Resto Centrados) */}
+                <div className="flex flex-wrap justify-center gap-6 w-full">
+                    {/* Botón Decorar Habitación */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/decorar_habitacion/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-indigo-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-indigo-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/30">
+                            <Icon name="home" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Decorar Habitación</h2>
+                        <p className="text-gray-400 text-sm">Rediseña interiores con IA.</p>
+                    </button>
 
-                {/* Botón Color */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/color/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-amber-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-amber-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/30">
-                        <Icon name="palette" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Color</h2>
-                    <p className="text-gray-400 text-sm">Colorea imágenes con IA.</p>
-                </button>
+                    {/* Botón Color */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/color/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-amber-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-amber-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/30">
+                            <Icon name="palette" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Color</h2>
+                        <p className="text-gray-400 text-sm">Colorea imágenes con IA.</p>
+                    </button>
 
-                {/* Botón Dibujo Líneas */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/dibujo_lineas/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
-                        <Icon name="pen-tool" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Dibujo Líneas</h2>
-                    <p className="text-gray-400 text-sm">Arte lineal desde fotos.</p>
-                </button>
+                    {/* Botón Dibujo Líneas */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/dibujo_lineas/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
+                            <Icon name="pen-tool" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Dibujo Líneas</h2>
+                        <p className="text-gray-400 text-sm">Arte lineal desde fotos.</p>
+                    </button>
 
-                {/* Botón Clonador */}
-                <button onClick={() => handleNavigate('https://atnojs.es/apps/clonador/index.html')} className="group glass glass-hover relative p-6 md:p-8 lg:p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-rose-500/30 w-full sm:w-[calc(50%-1.5rem)] md:w-[calc(33.333%-1.5rem)] lg:w-[calc(20%-1.5rem)] xl:w-[calc(16.666%-1.5rem)] min-w-[240px]">
-                    <div className="bg-rose-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-rose-400 mb-4 border border-rose-500/30">
-                        <Icon name="users" size={28} />
-                    </div>
-                    <h2 className="text-2xl font-bold">Clonador</h2>
-                    <p className="text-gray-400 text-sm">Face swap con IA.</p>
-                </button>
+                    {/* Botón Clonador */}
+                    <button onClick={() => handleNavigate('https://atnojs.es/apps/clonador/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-rose-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="bg-rose-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-rose-400 mb-4 border border-rose-500/30">
+                            <Icon name="users" size={28} />
+                        </div>
+                        <h2 className="text-2xl font-bold">Clonador</h2>
+                        <p className="text-gray-400 text-sm">Face swap con IA.</p>
+                    </button>
+                </div>
             </div>
 
             {user && (
