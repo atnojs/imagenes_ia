@@ -398,6 +398,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Editar Imágenes */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/editar/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-cyan-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-cyan-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="wand-2" size={160} />
+                        </div>
                         <div className="bg-cyan-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-cyan-400 mb-4 border border-cyan-500/30">
                             <Icon name="wand-2" size={28} />
                         </div>
@@ -407,6 +410,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Ajustar Imágenes */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/ajustes_imagen/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-emerald-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="sliders" size={160} />
+                        </div>
                         <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
                             <Icon name="sliders" size={28} />
                         </div>
@@ -416,6 +422,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Combinar Imágenes */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/imagenes_ia/combinar_imagenes/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-pink-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-pink-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="layers" size={160} />
+                        </div>
                         <div className="bg-pink-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-pink-400 mb-4 border border-pink-500/30">
                             <Icon name="layers" size={28} />
                         </div>
@@ -425,6 +434,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Copiar Estilo */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/copiar_estilo/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-blue-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-blue-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="copy" size={160} />
+                        </div>
                         <div className="bg-blue-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 mb-4 border border-blue-500/30">
                             <Icon name="copy" size={28} />
                         </div>
@@ -434,6 +446,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Illusion Diffusion */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/illusion_diffusion/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-orange-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-orange-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="circle-dashed" size={160} />
+                        </div>
                         <div className="bg-orange-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-orange-400 mb-4 border border-orange-500/30">
                             <Icon name="circle-dashed" size={28} />
                         </div>
@@ -446,6 +461,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
                 <div className="flex flex-wrap justify-center gap-6 w-full">
                     {/* Botón Decorar Habitación */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/decorar_habitacion/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-indigo-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-indigo-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="home" size={160} />
+                        </div>
                         <div className="bg-indigo-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/30">
                             <Icon name="home" size={28} />
                         </div>
@@ -455,6 +473,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Color */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/color/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-amber-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-amber-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="palette" size={160} />
+                        </div>
                         <div className="bg-amber-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-amber-400 mb-4 border border-amber-500/30">
                             <Icon name="palette" size={28} />
                         </div>
@@ -464,6 +485,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Dibujo Líneas */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/dibujo_lineas/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-emerald-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-emerald-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="pen-tool" size={160} />
+                        </div>
                         <div className="bg-emerald-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-emerald-400 mb-4 border border-emerald-500/30">
                             <Icon name="pen-tool" size={28} />
                         </div>
@@ -473,6 +497,9 @@ const Splash = ({ onLogout, user, isAdmin, onAdminOpen }) => {
 
                     {/* Botón Clonador */}
                     <button onClick={() => handleNavigate('https://atnojs.es/apps/clonador/index.html')} className="group glass glass-hover relative p-10 rounded-[2.5rem] text-left space-y-4 overflow-hidden border-rose-500/30 w-full md:w-[calc(33.333%-1.5rem)] lg:w-[calc(16.666%-1.5rem)] min-w-[240px]">
+                        <div className="absolute top-0 right-0 p-6 text-rose-500/10 transform group-hover:scale-150 transition-transform duration-700">
+                            <Icon name="users" size={160} />
+                        </div>
                         <div className="bg-rose-500/20 w-14 h-14 rounded-2xl flex items-center justify-center text-rose-400 mb-4 border border-rose-500/30">
                             <Icon name="users" size={28} />
                         </div>
